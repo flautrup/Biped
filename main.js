@@ -29,6 +29,30 @@ const lightOff = () => {
   console.log(`The blue light should be off...`)
 }
 
+
+
+function onPageRequest(req, res) {
+  var a = url.parse(req.url, true);
+  if (a.pathname == "/") {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end("BIPed REST API 0.1");
+  } else if (a.pathname == "/hello") {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end("Hello World");
+  } else if (a.pathname == "/ledOn") {
+    digitalWrite(D0, false);
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end("Red Led On");
+  } else if (a.pathname == "/ledOff") {
+    digitalWrite(D0, true);
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end("Red Led Off");
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end(JSON.stringify(a));
+  }
+}
+
 function main() {
   wifi.stopAP() // Don't act as a Wifi access point for other devices
   // Save a reference to the attempt that we can pass around.
@@ -46,14 +70,17 @@ function main() {
         lightOff()
         console.log(`successfully disconnected...`)
       })
-    })
-    // Here's an example of some app code that comes after we've set up all our wifi stuff.
-    // In this case I just trigger a disconnect for demonstration purposes.
-    // But you could have all your app's business logic playout here.
-    //.then(() => setTimeout(wifi.disconnect, 3000))
-    //.catch(error => {
-    //  console.error(error)
-    //})
 
-  
+      var http = require("http");
+      http.createServer(onPageRequest).listen(8080);
+    })
+  // Here's an example of some app code that comes after we've set up all our wifi stuff.
+  // In this case I just trigger a disconnect for demonstration purposes.
+  // But you could have all your app's business logic playout here.
+  //.then(() => setTimeout(wifi.disconnect, 3000))
+  //.catch(error => {
+  //  console.error(error)
+  //})
+
+
 }
