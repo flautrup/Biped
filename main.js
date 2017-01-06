@@ -1,6 +1,5 @@
 // main.js
 const wifi = require('Wifi')  // This is one of our magic, native Espruino friends.
-//const servo = require('servo') // Load native servo module
 
 // If you plan to publish your code,
 // it's a good idea to keep your wifi name and password in a secure file that you do not version control.
@@ -20,26 +19,31 @@ const connect = (networkName, options) => {
   )
 }
 
+//Turn on blue light
 const lightOn = () => {
   digitalWrite(D2, isOn = false)
   console.log('A blue LED should be on...')
 }
 
+//Turn off blue light
 const lightOff = () => {
   digitalWrite(D2, isOn = true)
   console.log(`The blue light should be off...`)
 }
 
+//Test sequence for servos 0,1,1.5,0
 const testServo = (port) => {
-  move(port,0,function () {
-    move(port,1, function () {
-      move(port,.5, function () {
-        move(port,0)
+  move(port, 0, function () {
+    move(port, 1, function () {
+      move(port, .5, function () {
+        move(port, 0)
       })
     })
   })
 }
 
+//Move servo on port to value and call callback when ready.
+//Todo: Use promise instead of callback.
 const move = (port, value, callback) => {
   var steps = 0;
 
@@ -58,12 +62,14 @@ const move = (port, value, callback) => {
   }, 20);
 }
 
+//Write a response 200 with message on res
 const httpResp = (res, message) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end(message);
   console.log(message);
 }
 
+//Parse get request path in the form of /action/port/value and return object
 var parseREST = (req) => {
   var RESTReq = {};
   var a = url.parse(req.url, true);
@@ -91,6 +97,19 @@ var parseREST = (req) => {
   return RESTReq;
 
 }
+
+//REST API definition using /action/port/value as parameters.
+//Action is what to do
+//Port in on what port
+//Value is the value to use on the port for the action.
+//Defined actions
+//  No action return version
+//  Hello return Hello World
+//  ledOn turn on red led
+//  ledOff turn on red led
+//  wifi return status information on wifi connection
+//  write write value to port using digitalWrite
+//  servo send PWM value to port (50hz), using test as value will run test cycle
 
 function onPageRequest(req, res) {
   //Path mapping to function for REST API
@@ -126,6 +145,7 @@ function onPageRequest(req, res) {
   }
 }
 
+// Init function.
 function main() {
   wifi.stopAP() // Don't act as a Wifi access point for other devices
   // Save a reference to the attempt that we can pass around.
@@ -136,24 +156,16 @@ function main() {
     })
     .then(() => {
       // From here on you have wifi access.
-      // You can do all your app stuff in this or subsequent .then() blocks.
-      // One good idea is to set up a "disconnected" event listener that allows you to handle
-      // lost wifi
       wifi.on('disconnected', () => {
         lightOff()
         console.log(`successfully disconnected...`)
       })
-
+      //Start web listener on port 8080 for REST API.
       var http = require("http");
       http.createServer(onPageRequest).listen(8080);
-
-    })
-  // Here's an example of some app code that comes after we've set up all our wifi stuff.
-  // In this case I just trigger a disconnect for demonstration purposes.
-  // But you could have all your app's business logic playout here.
-  //.then(() => setTimeout(wifi.disconnect, 3000))
+    });
   //.catch(error => {
-  //  console.error(error)
+  //console.error(error)
   //})
 
 
