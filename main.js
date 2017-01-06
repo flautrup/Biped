@@ -92,8 +92,6 @@ var parseREST = (req) => {
 
 }
 
-
-
 function onPageRequest(req, res) {
   //Path mapping to function for REST API
   var RESTReq = parseREST(req);
