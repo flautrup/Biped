@@ -134,7 +134,7 @@ function onPageRequest(req, res) {
     if (RESTReq.value == "test") {
       testServo(RESTReq.port);
     } else if (RESTReq.value > 0) {
-      move(RESTReq.port, RESTReq.value / 10);
+      move(RESTReq.port, RESTReq.value / 100);
     } else {
       move(RESTReq.port, 0);
     }
