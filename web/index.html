@@ -1,0 +1,100 @@
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+
+<body ng-app="BiPed" ng-cloak>
+    <md-toolbar class="md-hue-2">
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+                <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+            </md-button>
+            <h2>
+                <span>BiPed control</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="Favorite">
+                <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+</md-button>
+<md-button class="md-icon-button" aria-label="More">
+    <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+</md-button>
+</div>
+</md-toolbar>
+
+<div ng-controller="AppCtrl" ng-cloak>
+    <md-slider-container>
+        <span>D0</span>
+        <md-slider flex min="0" max="100" ng-model="servo.D0" aria-label="d0" id="d0-slider">
+        </md-slider>
+        <md-input-container>
+            <input flex type="number" ng-model="servo.D0" aria-label="d0" aria-controls="d0-slider">
+        </md-input-container>
+    </md-slider-container>
+    <md-slider-container>
+        <span>D4</span>
+        <md-slider flex min="0" max="100" ng-model="servo.D4" aria-label="d4" id="d4-slider">
+        </md-slider>
+        <md-input-container>
+            <input flex type="number" ng-model="servo.D4" aria-label="d4" aria-controls="d4-slider">
+        </md-input-container>
+    </md-slider-container>
+    <md-slider-container>
+        <span>D12</span>
+        <md-slider flex min="0" max="100" ng-model="servo.D12" aria-label="d12" id="d12-slider">
+        </md-slider>
+        <md-input-container>
+            <input flex type="number" ng-model="servo.D12" aria-label="d12" aria-controls="d12-slider">
+        </md-input-container>
+    </md-slider-container>
+    <md-slider-container>
+        <span>D14</span>
+        <md-slider flex min="0" max="100" ng-model="servo.D14" aria-label="d14" id="d14-slider">
+        </md-slider>
+        <md-input-container>
+            <input flex type="number" ng-model="servo.D14" aria-label="d14" aria-controls="d14-slider">
+        </md-input-container>
+    </md-slider-container>
+</div>
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script src="scripts/bipedCtrl.js">
+</script>
+<style>
+    @font-face {
+      font-family:"icomoon";
+      src:url("https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot");
+      font-weight:normal;
+      font-style:normal;
+    }
+    @font-face {
+      font-family: 'icomoon';
+      src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?-cmq1um');
+      src:url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.eot?#iefix-cmq1um') format('embedded-opentype'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.woff?-cmq1um') format('woff'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.ttf?-cmq1um') format('truetype'),
+      url('https://cdn.rawgit.com/angular/material/master/docs/app/fonts/icomoon.svg?-cmq1um#icomoon') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+</style>
+</body>
+
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->
