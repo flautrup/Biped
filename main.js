@@ -7,6 +7,7 @@ const wifi = require('Wifi')  // This is one of our magic, native Espruino frien
 import CONFIG from './wifi.config.json'
 const { name: WIFI_NAME, password: WIFI_PASSWORD } = CONFIG
 
+//console.log();
 
 // Wrap the call to wifi.connect in a native Promise so it's a bit easier to deal with later
 const connect = (networkName, options) => {
@@ -50,7 +51,7 @@ const move = (port, value, callback) => {
   console.log(value);
 
   interval = setInterval(function () {
-    if (steps > 20) {
+    if (steps > 1) {
       clearInterval(interval);
       interval = undefined;
       steps = 0;
