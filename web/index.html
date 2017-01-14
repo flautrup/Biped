@@ -7,71 +7,90 @@
 </head>
 
 <body ng-app="BiPed" ng-cloak>
-    <md-toolbar class="md-hue-2">
-        <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
-                <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-            </md-button>
-            <h2>
-                <span>BiPed control</span>
-            </h2>
-            <span flex></span>
-            <md-button class="md-icon-button" aria-label="Favorite">
-                <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
-</md-button>
-<md-button class="md-icon-button" aria-label="More">
-    <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
-</md-button>
-</div>
-</md-toolbar>
+    <div ng-controller="AppCtrl" ng-cloak>
+        <md-toolbar class="md-hue-2">
+            <div class="md-toolbar-tools" layout="row" layout-align="space-around center">
+                <h2>
+                    <span>BiPed control</span>
+                </h2>
+                <md-input-container layout="row">
+                    <label>Server</label>
+                    <input ng-model="server">
+                </md-input-container>
+            </div>
+        </md-toolbar>
 
-<div ng-controller="AppCtrl" ng-cloak>
-    <md-slider-container>
-        <span>D4</span>
-        <md-slider flex min="0" max="100" ng-model="servo.D4" aria-label="d4" id="d4-slider" ng-change="updateServo('D4', servo.D4)">
-        </md-slider>
-        <md-input-container>
-            <input flex type="number" ng-model="servo.D4" aria-label="d4" aria-controls="d4-slider">
-        </md-input-container>
-    </md-slider-container>
-    <md-slider-container>
-        <span>D5</span>
-        <md-slider flex min="0" max="100" ng-model="servo.D5" aria-label="d5" id="d5-slider" ng-change="updateServo('D5', servo.D5)">
-        </md-slider>
-        <md-input-container>
-            <input flex type="number" ng-model="servo.D5" aria-label="d5" aria-controls="d5-slider">
-        </md-input-container>
-    </md-slider-container>
-    <md-slider-container>
-        <span>D12</span>
-        <md-slider flex min="0" max="100" ng-model="servo.D12" aria-label="d12" id="d12-slider" ng-change="updateServo('D12', servo.D12)">
-        </md-slider>
-        <md-input-container>
-            <input flex type="number" ng-model="servo.D12" aria-label="d12" aria-controls="d12-slider">
-        </md-input-container>
-    </md-slider-container>
-    <md-slider-container>
-        <span>D14</span>
-        <md-slider flex min="0" max="100" ng-model="servo.D14" aria-label="d14" id="d14-slider" ng-change="updateServo('D14', servo.D14)">
-        </md-slider>
-        <md-input-container>
-            <input flex type="number" ng-model="servo.D14" aria-label="d14" aria-controls="d14-slider">
-        </md-input-container>
-    </md-slider-container>
-</div>
 
-<!-- Angular Material requires Angular.js Libraries -->
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+        <md-toolbar layout="row" class="md-hue-3">
+            <div class="md-toolbar-tools">
+                <span>Positions</span>
+            </div>
+        </md-toolbar>
+        <md-slider-container>
+            <span>D4</span>
+            <md-slider flex min="0" max="100" ng-model="servo.D4" aria-label="d4" id="d4-slider" ng-change="updateServo('D4', servo.D4)">
+            </md-slider>
+            <md-input-container>
+                <input flex type="number" ng-model="servo.D4" aria-label="d4" aria-controls="d4-slider">
+            </md-input-container>
+        </md-slider-container>
+        <md-slider-container>
+            <span>D5</span>
+            <md-slider flex min="0" max="100" ng-model="servo.D5" aria-label="d5" id="d5-slider" ng-change="updateServo('D5', servo.D5)">
+            </md-slider>
+            <md-input-container>
+                <input flex type="number" ng-model="servo.D5" aria-label="d5" aria-controls="d5-slider">
+            </md-input-container>
+        </md-slider-container>
+        <md-slider-container>
+            <span>D12</span>
+            <md-slider flex min="0" max="100" ng-model="servo.D12" aria-label="d12" id="d12-slider" ng-change="updateServo('D12', servo.D12)">
+            </md-slider>
+            <md-input-container>
+                <input flex type="number" ng-model="servo.D12" aria-label="d12" aria-controls="d12-slider">
+            </md-input-container>
+        </md-slider-container>
+        <md-slider-container>
+            <span>D14</span>
+            <md-slider flex min="0" max="100" ng-model="servo.D14" aria-label="d14" id="d14-slider" ng-change="updateServo('D14', servo.D14)">
+            </md-slider>
+            <md-input-container>
+                <input flex type="number" ng-model="servo.D14" aria-label="d14" aria-controls="d14-slider">
+            </md-input-container>
+        </md-slider-container>
+        <div layout="row" layout-align="center center">
+            <md-button class="md-raised md-primary" ng-click="store(servo)">Store</md-button>
+        </div>
 
-<!-- Angular Material Library -->
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+        <md-content>
+            <md-toolbar layout="row" class="md-hue-3">
+                <div class="md-toolbar-tools">
+                    <span>Recording</span>
+                </div>
+            </md-toolbar>
+            <md-list flex>
+                <md-list-item class="md-1-line" ng-repeat="item in flow">
+                    D4 = {{item.D4}}, D5 = {{item.D5}}, D12 ={{item.D12}}, D14={{item.D14}}
+                </md-list-item>
+            </md-list>
+        </md-content>
+        <div layout="row" layout-align="center center">
+            <md-button class="md-raised md-primary" ng-click="play(flow)">Play</md-button>
+        </div>
+    </div>
 
-<!-- Your application bootstrap  -->
-<script src="scripts/bipedCtrl.js">
-</script>
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+    <!-- Your application bootstrap  -->
+    <script src="scripts/bipedCtrl.js">
+    </script>
 <style>
     @font-face {
       font-family:"icomoon";
