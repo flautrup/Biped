@@ -17,16 +17,25 @@ angular.module('BiPed', ['ngMaterial'])
   }
 
   $scope.play = (flow) => {
-    for(var count=0 ; count < flow.length; count++) {
-      $scope.updateServo("D4",flow[count].D4);
-      $scope.updateServo("D5",flow[count].D5);
-      $scope.updateServo("D12",flow[count].D12);
-      $scope.updateServo("D14",flow[count].D14);
-    }
+    var count=0;
+    interval= setInterval( function () {
+      if(count == flow.length) {
+        clearInterval(interval);
+      }
+      $scope.sendState(flow, count);
+      count++;
+    },500)
+  }
+
+  $scope.sendState = (flow,index) => {
+      $scope.updateServo("D4",flow[index].D4);
+      $scope.updateServo("D5",flow[index].D5);
+      $scope.updateServo("D12",flow[index].D12);
+      $scope.updateServo("D14",flow[index].D14);
   }
 
   $scope.updateServo = (port, value) => {
       url="http://"+$scope.server+"/servo/"+port+"/"+value;
-      $http.get(url).success(console.log(url));
+      $http.get(url).then(console.log("Success "+url), console.log("Error "+url));
   }
 }]);

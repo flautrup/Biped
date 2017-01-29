@@ -1,24 +1,14 @@
 // main.js
 const wifi = require('Wifi')  // This is one of our magic, native Espruino friends.
+var ws;
 
-// If you plan to publish your code,
-// it's a good idea to keep your wifi name and password in a secure file that you do not version control.
-// In this case I've named my file "wifi.config.json"
-import CONFIG from './wifi.config.json'
-const { name: WIFI_NAME, password: WIFI_PASSWORD } = CONFIG
+//Use wifi.save() to store wifi information
 
-//console.log();
-
-// Wrap the call to wifi.connect in a native Promise so it's a bit easier to deal with later
-const connect = (networkName, options) => {
-  console.log(`attempting to connect to network named: ${networkName}`)
-  return new Promise((resolve, reject) => wifi.connect(networkName, options, error => {
-    const ipAddress = wifi.getIP().ip
-    if (error) reject(error)
-    else resolve(ipAddress)
-  })
-  )
-}
+var page = '<html><body><script>var ws;setTimeout(function(){';
+page += 'ws = new WebSocket("ws://" + location.host + "/biped_websocket", "JSON");';
+page += 'ws.onmessage = function (event) { console.log("MSG:"+event.data); };';
+page += 'setTimeout(function() { ws.send("Hello to Espruino!"); }, 1000);';
+page += '},1000);</script></body></html>';
 
 //Turn on blue light
 const lightOn = () => {
@@ -106,6 +96,7 @@ var parseREST = (req) => {
 //Defined actions
 //  No action return version
 //  Hello return Hello World
+//  wstest return test page for websocket
 //  ledOn turn on red led
 //  ledOff turn on red led
 //  wifi return status information on wifi connection
@@ -120,6 +111,9 @@ function onPageRequest(req, res) {
     httpResp(res, "BIPed REST API 0.1");
   } else if (RESTReq.action == "hello") {
     httpResp(res, "Hello World")
+  } else if (RESTReq.action == "wstest") {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(page);
   } else if (RESTReq.action == "ledOn") {
     digitalWrite(D0, false);
     httpResp(res, "Red Led On");
@@ -144,30 +138,31 @@ function onPageRequest(req, res) {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end(JSON.stringify(RESTReq));
   }
-}
+};
 
 // Init function.
 function main() {
-  wifi.stopAP() // Don't act as a Wifi access point for other devices
-  // Save a reference to the attempt that we can pass around.
-  const connectionAttempt = connect(WIFI_NAME, { password: WIFI_PASSWORD })
-    .then(ip => {
-      console.log(`successfully connected to ${ip}`)
-      lightOn() // Again, this is just a reminder that we are wifi connected now
+  wifi.on('connected', function (details) {
+    console.log(`successfully connected to` + details.ip);
+    lightOn(); // Again, this is just a reminder that we are wifi connected now
+  });
+
+  var details=wifi.getDetails();
+  if (details.status=="connected") {
+    lightOn();
+  }
+
+  //Start web listener on port 3000 for REST API.
+
+  var server = require('ws').createServer(onPageRequest)
+  server.listen(3000);
+  server.on("websocket", function (w) {
+    console.log("WS Connected");
+    ws = w;
+    ws.on('close', function () { console.log("WS closed"); });
+    ws.on('message', function (msg) {
+      print("[WS] " + JSON.stringify(msg));
     })
-    .then(() => {
-      // From here on you have wifi access.
-      wifi.on('disconnected', () => {
-        lightOff()
-        console.log(`successfully disconnected...`)
-      })
-      //Start web listener on port 8080 for REST API.
-      var http = require("http");
-      http.createServer(onPageRequest).listen(8080);
-    });
-  //.catch(error => {
-  //console.error(error)
-  //})
-
-
-}
+    ws.send("Hello from Espruino!");
+  })
+};
