@@ -7,7 +7,7 @@
 </head>
 
 <body ng-app="BiPed" ng-cloak>
-    <div ng-controller="AppCtrl" ng-cloak>
+    <div ng-controller="AppCtrl" ng-cloak >
         <md-toolbar class="md-hue-2">
             <div class="md-toolbar-tools" layout="row" layout-align="space-around center">
                 <h2>
@@ -17,6 +17,7 @@
                     <label>Server</label>
                     <input ng-model="server">
                 </md-input-container>
+                <md-button class="md-raised md-primary" ng-click="ws=connectWS()">Connect</md-button>
             </div>
         </md-toolbar>
 
@@ -28,7 +29,7 @@
         </md-toolbar>
         <md-slider-container>
             <span>D4</span>
-            <md-slider flex min="0" max="100" ng-model="servo.D4" aria-label="d4" id="d4-slider" ng-change="updateServo('D4', servo.D4)">
+            <md-slider flex min="0" max="100" ng-model="servo.D4" aria-label="d4" id="d4-slider" ng-change="updateServo(servo)">
             </md-slider>
             <md-input-container>
                 <input flex type="number" ng-model="servo.D4" aria-label="d4" aria-controls="d4-slider">
@@ -36,7 +37,7 @@
         </md-slider-container>
         <md-slider-container>
             <span>D5</span>
-            <md-slider flex min="0" max="100" ng-model="servo.D5" aria-label="d5" id="d5-slider" ng-change="updateServo('D5', servo.D5)">
+            <md-slider flex min="0" max="100" ng-model="servo.D5" aria-label="d5" id="d5-slider" ng-change="updateServo(servo)">
             </md-slider>
             <md-input-container>
                 <input flex type="number" ng-model="servo.D5" aria-label="d5" aria-controls="d5-slider">
@@ -44,7 +45,7 @@
         </md-slider-container>
         <md-slider-container>
             <span>D12</span>
-            <md-slider flex min="0" max="100" ng-model="servo.D12" aria-label="d12" id="d12-slider" ng-change="updateServo('D12', servo.D12)">
+            <md-slider flex min="0" max="100" ng-model="servo.D12" aria-label="d12" id="d12-slider" ng-change="updateServo(servo)">
             </md-slider>
             <md-input-container>
                 <input flex type="number" ng-model="servo.D12" aria-label="d12" aria-controls="d12-slider">
@@ -52,7 +53,7 @@
         </md-slider-container>
         <md-slider-container>
             <span>D14</span>
-            <md-slider flex min="0" max="100" ng-model="servo.D14" aria-label="d14" id="d14-slider" ng-change="updateServo('D14', servo.D14)">
+            <md-slider flex min="0" max="100" ng-model="servo.D14" aria-label="d14" id="d14-slider" ng-change="updateServo(servo)">
             </md-slider>
             <md-input-container>
                 <input flex type="number" ng-model="servo.D14" aria-label="d14" aria-controls="d14-slider">

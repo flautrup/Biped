@@ -7,9 +7,18 @@ angular.module('BiPed', ['ngMaterial'])
     D14: 50
   };
 
+  $scope.ws="";
+  var lastmessage=Date.now();
+
+  $scope.connectWS = () => {
+     var ws;
+     ws = new WebSocket("ws://"+$scope.server+ "/biped_websocket", "JSON");
+     return (ws);
+  }
+
   $scope.flow=[];
 
-  $scope.server="192.168.1.115:8080"
+  $scope.server="192.168.1.115:3000"
 
   $scope.store = (state) => {
     var cloneOfState = JSON.parse(JSON.stringify(state));
@@ -19,7 +28,7 @@ angular.module('BiPed', ['ngMaterial'])
   $scope.play = (flow) => {
     var count=0;
     interval= setInterval( function () {
-      if(count == flow.length) {
+      if(count == flow.length-1) {
         clearInterval(interval);
       }
       $scope.sendState(flow, count);
@@ -28,14 +37,16 @@ angular.module('BiPed', ['ngMaterial'])
   }
 
   $scope.sendState = (flow,index) => {
-      $scope.updateServo("D4",flow[index].D4);
-      $scope.updateServo("D5",flow[index].D5);
-      $scope.updateServo("D12",flow[index].D12);
-      $scope.updateServo("D14",flow[index].D14);
+      $scope.updateServo(flow[index]);
   }
 
-  $scope.updateServo = (port, value) => {
-      url="http://"+$scope.server+"/servo/"+port+"/"+value;
-      $http.get(url).then(console.log("Success "+url), console.log("Error "+url));
+  $scope.updateServo = (servoState) => {
+      //url="http://"+$scope.server+"/servo/"+port+"/"+value;
+      //$http.get(url).then(console.log("Success "+url), console.log("Error "+url));
+      //Trottle to avoid problem at ESP8266 side
+      if(Date.now()-lastmessage > 100 ) {
+        $scope.ws.send(JSON.stringify(servoState));
+        lastmessage=Date.now();
+      }
   }
 }]);

@@ -60,6 +60,13 @@ const httpResp = (res, message) => {
   console.log(message);
 }
 
+var parseWS = (data) => {
+  move("D4",data.D4/100);
+  move("D5",data.D5/100);
+  move("D12",data.D12/100);
+  move("D14",data.D14/100);
+}
+
 //Parse get request path in the form of /action/port/value and return object
 var parseREST = (req) => {
   var RESTReq = {};
@@ -162,6 +169,9 @@ function main() {
     ws.on('close', function () { console.log("WS closed"); });
     ws.on('message', function (msg) {
       print("[WS] " + JSON.stringify(msg));
+      servoState=JSON.parse(msg);
+      console.log(servoState);
+      parseWS(servoState);
     })
     ws.send("Hello from Espruino!");
   })
