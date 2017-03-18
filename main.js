@@ -2,7 +2,7 @@
 const wifi = require('Wifi')  // This is one of our magic, native Espruino friends.
 var ws;
 
-var current = { D4: 0, D5: 0, D12: 0, D14:0 };
+var current = { D4: 50, D5: 50, D12: 50, D14:50 };
 
 //Use wifi.save() to store wifi information
 
@@ -37,13 +37,14 @@ const testServo = (port) => {
 
 //Move servo on port to value and call callback when ready.
 //Todo: Use promise instead of callback.
+//Make the pulse run all the time and use an event to trigger changes.
 const move = (port, value, callback) => {
   var steps = 0;
 
   console.log(value);
 
   interval = setInterval(function () {
-    if (steps > 3) {
+    if (steps >3) {
       clearInterval(interval);
       interval = undefined;
       steps = 0;
@@ -55,6 +56,27 @@ const move = (port, value, callback) => {
   }, 20);
 }
 
+//Round number 
+function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+}
+
+//Start the pulse to servos
+const startPwM = () => {
+  console.log("Start PwM");
+  interval = setInterval(function () {
+    digitalPulse(D4, 1, 1 + E.clip(round(current.D4/100,2), 0, 1));
+    digitalPulse(D5, 1, 1 + E.clip(round(current.D5/100,2), 0, 1));
+    digitalPulse(D12, 1, 1 + E.clip(round(current.D12/100,2), 0, 1));
+    digitalPulse(D14, 1, 1 + E.clip(round(current.D14/100,2), 0, 1));
+    //digitalPulse(port, 1, 1.5);
+    //steps++;
+  }, 20);
+}
+
+
+
 //Write a response 200 with message on res
 const httpResp = (res, message) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -65,19 +87,19 @@ const httpResp = (res, message) => {
 var parseWS = (data) => {
   if (current.D4 != data.D4) {
     current.D4=data.D4;
-    move("D4", data.D4 / 100);
+    //move("D4", data.D4 / 100);
   }
   if (current.D5 != data.D5) {
     current.D5=data.D5;
-    move("D5", data.D5 / 100);
+    //move("D5", data.D5 / 100);
   }
   if (current.D12 != data.D12) {
     current.D12=data.D12;
-    move("D12", data.D12 / 100);
+    //move("D12", data.D12 / 100);
   }
   if (current.D14 != data.D14) {
     current.D14=data.D14;
-    move("D14", data.D14 / 100);
+    //move("D14", data.D14 / 100);
   }
 }
 
@@ -179,6 +201,7 @@ function main() {
   server.listen(3000);
   server.on("websocket", function (w) {
     console.log("WS Connected");
+    startPwM();
     ws = w;
     ws.on('close', function () { console.log("WS closed"); });
     ws.on('message', function (msg) {
