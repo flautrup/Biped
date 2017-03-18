@@ -41,8 +41,6 @@ angular.module('BiPed', ['ngMaterial'])
   }
 
   $scope.updateServo = (servoState) => {
-      //url="http://"+$scope.server+"/servo/"+port+"/"+value;
-      //$http.get(url).then(console.log("Success "+url), console.log("Error "+url));
       //Trottle to avoid problem at ESP8266 side
       if(Date.now()-lastmessage > 100 ) {
         $scope.ws.send(JSON.stringify(servoState));

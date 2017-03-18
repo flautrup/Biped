@@ -2,6 +2,8 @@
 const wifi = require('Wifi')  // This is one of our magic, native Espruino friends.
 var ws;
 
+var current = { D4: 0, D5: 0, D12: 0, D14:0 };
+
 //Use wifi.save() to store wifi information
 
 var page = '<html><body><script>var ws;setTimeout(function(){';
@@ -41,7 +43,7 @@ const move = (port, value, callback) => {
   console.log(value);
 
   interval = setInterval(function () {
-    if (steps > 1) {
+    if (steps > 3) {
       clearInterval(interval);
       interval = undefined;
       steps = 0;
@@ -61,10 +63,22 @@ const httpResp = (res, message) => {
 }
 
 var parseWS = (data) => {
-  move("D4",data.D4/100);
-  move("D5",data.D5/100);
-  move("D12",data.D12/100);
-  move("D14",data.D14/100);
+  if (current.D4 != data.D4) {
+    current.D4=data.D4;
+    move("D4", data.D4 / 100);
+  }
+  if (current.D5 != data.D5) {
+    current.D5=data.D5;
+    move("D5", data.D5 / 100);
+  }
+  if (current.D12 != data.D12) {
+    current.D12=data.D12;
+    move("D12", data.D12 / 100);
+  }
+  if (current.D14 != data.D14) {
+    current.D14=data.D14;
+    move("D14", data.D14 / 100);
+  }
 }
 
 //Parse get request path in the form of /action/port/value and return object
@@ -154,8 +168,8 @@ function main() {
     lightOn(); // Again, this is just a reminder that we are wifi connected now
   });
 
-  var details=wifi.getDetails();
-  if (details.status=="connected") {
+  var details = wifi.getDetails();
+  if (details.status == "connected") {
     lightOn();
   }
 
@@ -169,7 +183,7 @@ function main() {
     ws.on('close', function () { console.log("WS closed"); });
     ws.on('message', function (msg) {
       print("[WS] " + JSON.stringify(msg));
-      servoState=JSON.parse(msg);
+      servoState = JSON.parse(msg);
       console.log(servoState);
       parseWS(servoState);
     })
